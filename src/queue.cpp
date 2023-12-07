@@ -13,8 +13,8 @@ namespace viewer {
         GpuTextureQueue& queue = *(GpuTextureQueue*)info.m_queue;
         gt_thread_id = info.m_logical_thread_id;
 
-        libfrac::error err = 0;
-        libfrac::GlContextBuilder cb;
+        window::error err = 0;
+        window::GlContextBuilder cb;
 
         if (err = cb.build(queue.m_display, &info.m_context, queue.m_share_context)) {
             queue.m_ready.store(true, std::memory_order_release);
@@ -141,8 +141,8 @@ namespace viewer {
         return 0;
     }
 
-    libfrac::error GpuTextureQueue::init(libfrac::GlDisplay t_display, libfrac::GlContext t_not_current_context,
-                                         libfrac::Window t_window) {
+    window::error GpuTextureQueue::init(window::GlDisplay t_display, window::GlContext t_not_current_context,
+                                         window::Window t_window) {
         m_display = t_display;
         m_share_context = t_not_current_context;
         m_window = t_window;

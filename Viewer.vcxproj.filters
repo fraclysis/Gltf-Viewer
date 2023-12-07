@@ -108,9 +108,6 @@
     <ClCompile Include="src\program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\light_program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\orbit_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -217,10 +214,10 @@
     <ClInclude Include="src\program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\light_program.h">
+    <ClInclude Include="src\orbit_camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\orbit_camera.h">
+    <ClInclude Include="src\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

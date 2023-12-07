@@ -18,7 +18,7 @@ enum render_mode : int {
 
 namespace viewer {
 
-    struct Viewer : libfrac::Event {
+    struct Viewer : window::Event {
         bool m_running = false;
         bool m_animating = false;
         bool m_open_dialog = false;
@@ -34,9 +34,9 @@ namespace viewer {
         float m_gui_width;
         float m_gui_height;
 
-        libfrac::GlContext m_context;
-        libfrac::GlDisplay m_display;
-        libfrac::Window m_window;
+        window::GlContext m_context;
+        window::GlDisplay m_display;
+        window::Window m_window;
 
         FileTextureQueue m_file_queue;
         GpuTextureQueue m_gpu_queue;
@@ -58,36 +58,36 @@ namespace viewer {
 
         void load_gltf_model(const char* t_model_path) noexcept;
 
-        libfrac::error init(libfrac::EventHandler<Viewer>* t_event_handler) noexcept;
+        window::error init(window::EventHandler<Viewer>* t_event_handler) noexcept;
         void free() noexcept;
 
         void render_gui();
         void render() noexcept;
         void redraw_handler();
         void load_gltf_if_requested();
-        void paint(libfrac::Window t_window) noexcept;
-        void close(libfrac::Window t_window) noexcept;
+        void paint(window::Window t_window) noexcept;
+        void close(window::Window t_window) noexcept;
         void load_programs() noexcept;
-        void resize(int t_width, int t_height, libfrac::Window t_window) noexcept;
+        void resize(int t_width, int t_height, window::Window t_window) noexcept;
 
-        void key_down(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept;
-        void key_up(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept;
+        void key_down(int t_vk_code, int t_scan_code, window::Window t_window) noexcept;
+        void key_up(int t_vk_code, int t_scan_code, window::Window t_window) noexcept;
 
-        void mouse_wheel(float t_dx, float t_dy, libfrac::Window t_window) noexcept;
-        void mouse_move(int t_x, int t_y, libfrac::Window t_window) noexcept;
-        void raw_mouse_delta(long t_dx, long t_dy, libfrac::Window t_window) noexcept;
+        void mouse_wheel(float t_dx, float t_dy, window::Window t_window) noexcept;
+        void mouse_move(int t_x, int t_y, window::Window t_window) noexcept;
+        void raw_mouse_delta(long t_dx, long t_dy, window::Window t_window) noexcept;
 
-        void mouse_button_down(int t_button, libfrac::Window t_window) noexcept;
-        void mouse_button_up(int t_button, libfrac::Window t_window) noexcept;
+        void mouse_button_down(int t_button, window::Window t_window) noexcept;
+        void mouse_button_up(int t_button, window::Window t_window) noexcept;
 
-        void character(int t_character, libfrac::Window t_window) noexcept;
-        void file_drop(std::filesystem::path t_path, libfrac::Window t_window) noexcept;
+        void character(int t_character, window::Window t_window) noexcept;
+        void file_drop(std::filesystem::path t_path, window::Window t_window) noexcept;
 
-        void notify(libfrac::Window t_window) noexcept;
+        void notify(window::Window t_window) noexcept;
 
         inline bool is_valid() noexcept { return m_running; }
 
-        void focus(bool t_focus, libfrac::Window t_window) noexcept;
+        void focus(bool t_focus, window::Window t_window) noexcept;
 
         inline void redraw() {
             if (!m_open_dialog)

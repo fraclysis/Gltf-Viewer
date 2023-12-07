@@ -14,7 +14,7 @@ namespace viewer {
         void* m_queue;
         size_t m_logical_thread_id;
         DWORD m_thread_id;
-        libfrac::GlContext m_context;
+        window::GlContext m_context;
     };
 
     struct alignas(64) GpuQueueWork {
@@ -34,11 +34,11 @@ namespace viewer {
     struct GpuTextureQueue {
         GpuQueueWork* m_buffer;
         std::atomic_int m_size;
-        libfrac::Window m_window;
+        window::Window m_window;
 
         HANDLE m_semaphore;
-        libfrac::GlDisplay m_display;
-        libfrac::GlContext m_share_context;
+        window::GlDisplay m_display;
+        window::GlContext m_share_context;
         ThreadInfo m_thread;
         std::mutex m_add_guard = std::mutex();
 
@@ -52,8 +52,8 @@ namespace viewer {
 
         GpuTextureQueue() = default;
 
-        libfrac::error init(libfrac::GlDisplay t_display, libfrac::GlContext t_not_current_context,
-                            libfrac::Window t_window);
+        window::error init(window::GlDisplay t_display, window::GlContext t_not_current_context,
+                            window::Window t_window);
         void free();
         void finish();
         void add_work(GpuQueueWork& t_work);

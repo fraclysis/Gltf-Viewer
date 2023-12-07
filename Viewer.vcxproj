@@ -233,7 +233,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\light_program.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\morph.cpp" />
@@ -284,7 +283,6 @@
     <ClInclude Include="src\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\imgui\imstb_textedit.h" />
     <ClInclude Include="src\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\light_program.h" />
     <ClInclude Include="src\log.h" />
     <ClInclude Include="src\morph.h" />
     <ClInclude Include="src\orbit_camera.h" />
@@ -293,6 +291,7 @@
     <ClInclude Include="src\queue.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\viewer.h" />
+    <ClInclude Include="src\window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

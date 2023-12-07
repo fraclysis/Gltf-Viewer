@@ -1,11 +1,5 @@
-// libfrac.hpp v0.1
-// Notation:
-//    t - function in
-//    r - function return
-//    m - member
-
-#ifndef LIB_FRAC_HPP_
-#define LIB_FRAC_HPP_
+#ifndef WINDOW_HPP_
+#define WINDOW_HPP_
 
 #ifdef _WIN32
 #define NOMINMAX
@@ -204,7 +198,7 @@ enum mouse_button_ {
     mouse_button_count,
 };
 
-namespace libfrac {
+namespace window {
 
 #ifdef LIB_FRAC_GL
     typedef HGLRC WINAPI wglCreateContextAttribsARB_type(HDC hdc, HGLRC hShareContext, const int* attribList);
@@ -220,7 +214,7 @@ namespace libfrac {
         const char* m_message = nullptr;
 
         error(DWORD t_code);
-        static libfrac::error message(const char* t_message);
+        static window::error message(const char* t_message);
 
         operator DWORD() const { return m_error_code; }
 
@@ -233,7 +227,7 @@ namespace libfrac {
 
     error init_gl();
 
-    template <typename T> LRESULT CALLBACK libfrac_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) noexcept;
+    template <typename T> LRESULT CALLBACK window_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) noexcept;
 
     struct Window {
         HWND m_hWnd = NULL;
@@ -305,7 +299,7 @@ namespace libfrac {
             WNDCLASSEXW wc{0};
             wc.cbSize = sizeof(wc);
             wc.style = m_style;
-            wc.lpfnWndProc = libfrac_WndProc<T>;
+            wc.lpfnWndProc = window_WndProc<T>;
             wc.hInstance = m_hInstance;
             wc.hCursor = m_hCursor;
             wc.lpszClassName = m_lpszClassName;
@@ -372,23 +366,23 @@ namespace libfrac {
     };
 
     struct Event {
-        void mouse_move(int t_x, int t_y, libfrac::Window t_window) noexcept;
-        void mouse_wheel(float t_dx, float t_dy, libfrac::Window t_window) noexcept;
-        void mouse_button_down(int t_button, libfrac::Window t_window) noexcept;
-        void mouse_button_up(int t_button, libfrac::Window t_window) noexcept;
-        void key_down(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept;
-        void key_up(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept;
-        void close(libfrac::Window t_window) noexcept;
-        void destroy(libfrac::Window t_window) noexcept;
-        void paint(libfrac::Window t_window) noexcept;
-        void resize(int t_width, int t_height, libfrac::Window t_window) noexcept;
-        void file_drop(std::filesystem::path t_path, libfrac::Window t_window) noexcept;
+        void mouse_move(int t_x, int t_y, window::Window t_window) noexcept;
+        void mouse_wheel(float t_dx, float t_dy, window::Window t_window) noexcept;
+        void mouse_button_down(int t_button, window::Window t_window) noexcept;
+        void mouse_button_up(int t_button, window::Window t_window) noexcept;
+        void key_down(int t_vk_code, int t_scan_code, window::Window t_window) noexcept;
+        void key_up(int t_vk_code, int t_scan_code, window::Window t_window) noexcept;
+        void close(window::Window t_window) noexcept;
+        void destroy(window::Window t_window) noexcept;
+        void paint(window::Window t_window) noexcept;
+        void resize(int t_width, int t_height, window::Window t_window) noexcept;
+        void file_drop(std::filesystem::path t_path, window::Window t_window) noexcept;
         inline bool is_valid() noexcept { return true; }
-        void notify(libfrac::Window t_window) noexcept;
-        void character(int t_character, libfrac::Window t_window) noexcept;
-        void focus(bool t_focus, libfrac::Window t_window) noexcept;
+        void notify(window::Window t_window) noexcept;
+        void character(int t_character, window::Window t_window) noexcept;
+        void focus(bool t_focus, window::Window t_window) noexcept;
 
-        void raw_mouse_delta(long t_dx, long t_dy, libfrac::Window t_window) noexcept;
+        void raw_mouse_delta(long t_dx, long t_dy, window::Window t_window) noexcept;
     };
 
     struct GlDisplayBuilder {
@@ -450,7 +444,7 @@ namespace libfrac {
         return 0;
     }
 
-    template <typename T> LRESULT CALLBACK libfrac_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) noexcept {
+    template <typename T> LRESULT CALLBACK window_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) noexcept {
         if (hWnd == 0) {
             return DefWindowProcW(hWnd, Msg, wParam, lParam);
         }
@@ -655,14 +649,14 @@ namespace libfrac {
         return DefWindowProcW(hWnd, Msg, wParam, lParam);
     }
 
-} // namespace libfrac
+} // namespace window
 
 #ifdef LIB_FRAC_IMPL
 #undef LIB_FRAC_IMPL
 
 #include <system_error>
 
-namespace libfrac {
+namespace window {
     GlPFN g_gl_pfn;
 
     typedef HGLRC WINAPI wglCreateContextAttribsARB_type(HDC hdc, HGLRC hShareContext, const int* attribList);
@@ -745,28 +739,28 @@ namespace libfrac {
         (void)(t_window);
     }
 
-    void Event::focus(bool t_focus, libfrac::Window t_window) noexcept {
+    void Event::focus(bool t_focus, window::Window t_window) noexcept {
         (void)(t_focus);
         (void)(t_window);
     }
 
-    void Event::raw_mouse_delta(long t_dx, long t_dy, libfrac::Window t_window) noexcept {
+    void Event::raw_mouse_delta(long t_dx, long t_dy, window::Window t_window) noexcept {
         (void)(t_dx);
         (void)(t_dy);
         (void)(t_window);
     }
 
-    void Event::mouse_wheel(float t_dx, float t_dy, libfrac::Window t_window) noexcept {
+    void Event::mouse_wheel(float t_dx, float t_dy, window::Window t_window) noexcept {
         (void)(t_dx);
         (void)(t_dy);
         (void)(t_window);
     }
 
-    void Event::mouse_button_down(int t_button, libfrac::Window t_window) noexcept {
+    void Event::mouse_button_down(int t_button, window::Window t_window) noexcept {
         (void)(t_button);
         (void)(t_window);
     }
-    void Event::mouse_button_up(int t_button, libfrac::Window t_window) noexcept {
+    void Event::mouse_button_up(int t_button, window::Window t_window) noexcept {
         (void)(t_button);
         (void)(t_window);
     }
@@ -777,7 +771,7 @@ namespace libfrac {
         (void)(t_window);
     }
 
-    void Event::character(int t_character, libfrac::Window t_window) noexcept {
+    void Event::character(int t_character, window::Window t_window) noexcept {
         (void)(t_character);
         (void)(t_window);
     }
@@ -788,13 +782,13 @@ namespace libfrac {
 
     void Event::notify(Window t_window) noexcept { (void)(t_window); }
 
-    void Event::resize(int t_width, int t_height, libfrac::Window t_window) noexcept {
+    void Event::resize(int t_width, int t_height, window::Window t_window) noexcept {
         (void)(t_width);
         (void)(t_height);
         (void)(t_window);
     }
 
-    void Event::file_drop(std::filesystem::path t_path, libfrac::Window t_window) noexcept {
+    void Event::file_drop(std::filesystem::path t_path, window::Window t_window) noexcept {
         (void)(t_path);
         (void)(t_window);
     }
@@ -960,8 +954,8 @@ namespace libfrac {
         return 0;
     }
 
-} // namespace libfrac
+} // namespace window
 
 #endif // LIB_FRAC_IMPLIB_FRAC_IMPL
 #endif // _WIN32
-#endif // !LIB_FRAC_HPP_
+#endif // !WINDOW_HPP_

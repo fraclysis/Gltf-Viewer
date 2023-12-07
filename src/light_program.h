@@ -1,7 +1,6 @@
 #pragma once
 #include "pch.h"
 
-#include "app_camera.h"
 #include "program.h"
 #include <glm/glm.hpp>
 

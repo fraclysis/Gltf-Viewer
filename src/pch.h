@@ -3,7 +3,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include <libfrac.hpp>
+#include <window.hpp>
 
 #include "log.h"
 

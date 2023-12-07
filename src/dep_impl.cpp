@@ -1,5 +1,5 @@
 #define LIB_FRAC_IMPL
-#include <libfrac.hpp>
+#include <window.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_THREAD_LOCALS

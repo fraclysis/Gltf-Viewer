@@ -3,19 +3,19 @@
 #include "viewer.h"
 
 int main() {
-    libfrac::error err = 0;
-    if (err = libfrac::init_gl()) {
+    window::error err = 0;
+    if (err = window::init_gl()) {
         log_lf(err);
         return err;
     }
 
-    libfrac::EventHandler<viewer::Viewer> event_handler;
+    window::EventHandler<viewer::Viewer> event_handler;
 
     {
         viewer::Viewer viewer{};
         event_handler.m_user_data = &viewer;
 
-        if (err = libfrac::EventHandlerBuilder().build(&event_handler)) {
+        if (err = window::EventHandlerBuilder().build(&event_handler)) {
             log_lf(err);
             return err;
         }
@@ -40,7 +40,7 @@ int main() {
 
         viewer.free();
     }
-
+    
     if (err = event_handler.destroy()) {
         log_lf(err);
     }

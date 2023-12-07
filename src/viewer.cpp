@@ -9,7 +9,7 @@
 #include <codecvt>
 #include <locale>
 
-ImGuiKey libfrac_key_to_imgui(int t_key);
+ImGuiKey window_key_to_imgui(int t_key);
 
 std::vector<char> read_to_vector(const WCHAR* path);
 
@@ -20,17 +20,17 @@ namespace viewer {
     bool g_show_warnings = false;
     std::vector<std::string> g_warn_messages;
 
-    libfrac::error Viewer::init(libfrac::EventHandler<Viewer>* t_event_handler) noexcept {
+    window::error Viewer::init(window::EventHandler<Viewer>* t_event_handler) noexcept {
         m_running = true;
         m_camera.m_step = m_camera.m_radius / 100.0f * m_camera_step_percent;
 
-        libfrac::error err = 0;
-        libfrac::WindowBuilder wb;
-        if (err = libfrac::GlDisplayBuilder().build(t_event_handler, &wb, &m_window, &m_display)) {
+        window::error err = 0;
+        window::WindowBuilder wb;
+        if (err = window::GlDisplayBuilder().build(t_event_handler, &wb, &m_window, &m_display)) {
             return err;
         }
 
-        libfrac::GlContextBuilder cb;
+        window::GlContextBuilder cb;
         if (err = cb.build(m_display, &m_context)) {
             return err;
         }
@@ -42,7 +42,7 @@ namespace viewer {
 
         unsigned int core_count = std::thread::hardware_concurrency();
         if (m_file_queue.init(std::max(core_count - 2, 1u), &m_gpu_queue) == 0) {
-            return libfrac::error::message("Failed to initialize texture loader threads.");
+            return window::error::message("Failed to initialize texture loader threads.");
         }
 
         if (err = m_display.make_current(m_context)) {
@@ -51,11 +51,11 @@ namespace viewer {
 
         GLenum glew_err;
         if (glew_err = glewInit() != GLEW_OK) {
-            return libfrac::error::message((const char*)glewGetErrorString(glew_err));
+            return window::error::message((const char*)glewGetErrorString(glew_err));
         }
 
         if (!ImGui::CreateContext()) {
-            return libfrac::error::message("Failed to initialize ImGui.");
+            return window::error::message("Failed to initialize ImGui.");
         }
 
         RECT rect;
@@ -69,10 +69,10 @@ namespace viewer {
 
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         if (!ImGui_ImplOpenGL3_Init()) {
-            return libfrac::error::message("Failed to initialize ImGui OpenGl.");
+            return window::error::message("Failed to initialize ImGui OpenGl.");
         }
         if (!ImGui_ImplOpenGL3_CreateFontsTexture()) {
-            return libfrac::error::message("Failed to create fonts texture.");
+            return window::error::message("Failed to create fonts texture.");
         }
 
         log_renderer_api_info();
@@ -358,7 +358,7 @@ namespace viewer {
         }
     }
 
-    void Viewer::resize(int t_width, int t_height, libfrac::Window t_window) noexcept {
+    void Viewer::resize(int t_width, int t_height, window::Window t_window) noexcept {
         if (t_width * t_height) {
             ImGuiIO& io = ImGui::GetIO();
 
@@ -370,16 +370,16 @@ namespace viewer {
         }
     }
 
-    void Viewer::key_down(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept {
+    void Viewer::key_down(int t_vk_code, int t_scan_code, window::Window t_window) noexcept {
         ImGuiIO& io = ImGui::GetIO();
-        io.AddKeyEvent(libfrac_key_to_imgui(t_vk_code), true);
+        io.AddKeyEvent(window_key_to_imgui(t_vk_code), true);
 
         redraw_times(3);
     }
 
-    void Viewer::key_up(int t_vk_code, int t_scan_code, libfrac::Window t_window) noexcept {
+    void Viewer::key_up(int t_vk_code, int t_scan_code, window::Window t_window) noexcept {
         ImGuiIO& io = ImGui::GetIO();
-        io.AddKeyEvent(libfrac_key_to_imgui(t_vk_code), false);
+        io.AddKeyEvent(window_key_to_imgui(t_vk_code), false);
 
         if (t_vk_code == KEY_R) {
             load_programs();
@@ -388,7 +388,7 @@ namespace viewer {
         redraw_times(3);
     }
 
-    void Viewer::mouse_wheel(float t_dx, float t_dy, libfrac::Window t_window) noexcept {
+    void Viewer::mouse_wheel(float t_dx, float t_dy, window::Window t_window) noexcept {
         if ((16 < m_last_x && m_last_x < m_gui_width + 16) && (16 < m_last_y && m_last_y < m_gui_height + 16)) {
             ImGuiIO& io = ImGui::GetIO();
             io.AddMouseWheelEvent(t_dx, t_dy);
@@ -400,7 +400,7 @@ namespace viewer {
         redraw_times(3);
     }
 
-    void Viewer::mouse_move(int t_x, int t_y, libfrac::Window t_window) noexcept {
+    void Viewer::mouse_move(int t_x, int t_y, window::Window t_window) noexcept {
         float dx = (float)t_x - m_last_x;
         float dy = (float)t_y - m_last_y;
 
@@ -432,9 +432,9 @@ namespace viewer {
         redraw_times(3);
     }
 
-    void Viewer::raw_mouse_delta(long t_dx, long t_dy, libfrac::Window t_window) noexcept {}
+    void Viewer::raw_mouse_delta(long t_dx, long t_dy, window::Window t_window) noexcept {}
 
-    void Viewer::mouse_button_down(int t_button, libfrac::Window t_window) noexcept {
+    void Viewer::mouse_button_down(int t_button, window::Window t_window) noexcept {
         m_button_state[t_button] = true;
         if (!m_mouse_captured) {
 #if _WIN32
@@ -449,7 +449,7 @@ namespace viewer {
         redraw_times(3);
     }
 
-    void Viewer::mouse_button_up(int t_button, libfrac::Window t_window) noexcept {
+    void Viewer::mouse_button_up(int t_button, window::Window t_window) noexcept {
         ImGuiIO& io = ImGui::GetIO();
         io.AddMouseButtonEvent(t_button, false);
         m_button_state[t_button] = false;
@@ -458,7 +458,7 @@ namespace viewer {
         if (m_mouse_captured) {
 #if _WIN32
             if (ReleaseCapture() == 0) {
-                log_lf(libfrac::error(GetLastError()));
+                log_lf(window::error(GetLastError()));
             }
 #endif
             m_mouse_captured = false;
@@ -467,22 +467,22 @@ namespace viewer {
         redraw_times(3);
     }
 
-    void Viewer::character(int t_character, libfrac::Window t_window) noexcept {
+    void Viewer::character(int t_character, window::Window t_window) noexcept {
         ImGuiIO& io = ImGui::GetIO();
         io.AddInputCharacterUTF16(t_character);
     }
 
-    void Viewer::file_drop(std::filesystem::path t_path, libfrac::Window t_window) noexcept {
+    void Viewer::file_drop(std::filesystem::path t_path, window::Window t_window) noexcept {
         load_gltf_model(t_path.string().c_str());
         redraw_times(3);
     }
 
-    void Viewer::notify(libfrac::Window t_window) noexcept {
+    void Viewer::notify(window::Window t_window) noexcept {
         log_info("Notified %p", (void*)t_window.m_hWnd);
         redraw();
     }
 
-    void Viewer::focus(bool t_focus, libfrac::Window t_window) noexcept {
+    void Viewer::focus(bool t_focus, window::Window t_window) noexcept {
         ImGuiIO& io = ImGui::GetIO();
         io.AddFocusEvent(t_focus);
     }
@@ -499,16 +499,16 @@ namespace viewer {
         m_gltf.fit_camera(m_camera, m_camera_step_percent);
     }
 
-    void Viewer::close(libfrac::Window t_window) noexcept { m_running = false; }
+    void Viewer::close(window::Window t_window) noexcept { m_running = false; }
 
-    void Viewer::paint(libfrac::Window t_window) noexcept {
-        libfrac::Event::paint(t_window); // Validate window
+    void Viewer::paint(window::Window t_window) noexcept {
+        window::Event::paint(t_window); // Validate window
         render();
     }
 
 } // namespace viewer
 
-ImGuiKey libfrac_key_to_imgui(int t_key) {
+ImGuiKey window_key_to_imgui(int t_key) {
     switch (t_key) {
     case KEY_TAB:
         return ImGuiKey_Tab;
